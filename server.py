@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import json
 import logging
+import os
+import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 logging.basicConfig(
@@ -79,6 +81,13 @@ class EchoHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    if not os.environ.get("SECRET_KEY"):
+        logger.error(
+            "SECRET_KEY environment variable is not set. "
+            "Please set it before starting the server."
+        )
+        sys.exit(0)
+
     server = HTTPServer(("0.0.0.0", PORT), EchoHandler)
     logger.info("Echo server started")
     try:
